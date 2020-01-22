@@ -21,6 +21,10 @@ export enum GET_APP_SYSTEM_MEMORY {
     FAILURE = "GET_APP_SYSTEM_MEMORY_FAILURE",
 }
 
+export const AUTO_UPDATE_MESSAGE = "AUTO_UPDATE_MESSAGE"
+
+export const UPDATE_AND_RESTART = "UPDATE_AND_RESTART"
+
 export interface GetAppMaximizedAction {
     type: typeof GET_APP_MAXIMIZED
     maximized: boolean

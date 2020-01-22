@@ -1,4 +1,4 @@
-import Electron from "electron"
+import Electron, { ipcMain } from "electron"
 import { MainWindow } from "./window"
 import { autoUpdater } from "electron-updater"
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer"
@@ -34,7 +34,8 @@ Electron.app.on("ready", () => {
     //         .catch(err => console.error("An error occurred: ", err))
     // }
     initWindow()
-    autoUpdater.checkForUpdatesAndNotify()
+    // autoUpdater.autoDownload = false
+    autoUpdater.checkForUpdates()
 })
 
 Electron.app.on("activate", () => {
@@ -77,7 +78,21 @@ export class Console {
 autoUpdater.on("update-available", info => {
     mainWindow.webContents.send("update-available", { data: info })
 })
+
+autoUpdater.on("download-progress", info => {
+    const { bytesPerSecond, percent, transferred, total } = info
+    mainWindow.webContents.send("download-progress", { data: { bytesPerSecond, percent, transferred, total } })
+})
+
+let downloaded = false
+
 autoUpdater.on("update-downloaded", info => {
+    downloaded = true
     mainWindow.webContents.send("update-downloaded", { data: info })
-    // autoUpdater.quitAndInstall()
+})
+
+ipcMain.on("update-restart", () => {
+    if (downloaded) {
+        autoUpdater.quitAndInstall()
+    }
 })

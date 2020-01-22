@@ -1,5 +1,5 @@
 import { request, subscibeChannel, consoleChannel } from "~/ipc"
-import { put, take, fork, all, call, takeEvery, select } from "redux-saga/effects"
+import { put, take, fork, all, call, takeEvery, takeLeading } from "redux-saga/effects"
 
 import {
     GET_APP_MAXIMIZED,
@@ -7,6 +7,7 @@ import {
     GET_TITLEBAR_HIDE,
     GET_APP_CPU_USAGE,
     GET_APP_SYSTEM_MEMORY,
+    UPDATE_AND_RESTART,
     GetAppMaximizedAction,
     GetAppVersionAction,
     GetAppTitleBarHideAction,
@@ -67,6 +68,20 @@ function* subscribeUpdateDownloaded() {
     }
 }
 
+function* subscribeUpdateDownloadProgress() {
+    const chan = yield subscibeChannel("download-progress")
+    while (true) {
+        const info: unknown = yield take(chan)
+        console.log("progress", info)
+    }
+}
+
+function* updateAndRestart() {
+    try {
+        yield call(request, "update-restart")
+    } catch (e) {}
+}
+
 function* sysemConsoleLog() {
     const chan = yield consoleChannel("console.log")
     while (true) {
@@ -109,10 +124,12 @@ export default function* sagas() {
     yield takeEvery(GET_APP_VERSION.REQUEST, getAppVersion)
     yield takeEvery(GET_APP_CPU_USAGE.REQUEST, getCPUUsage)
     yield takeEvery(GET_APP_SYSTEM_MEMORY.REQUEST, getSystemMemory)
+    yield takeLeading(UPDATE_AND_RESTART, updateAndRestart)
     yield fork(subscribeWindowFullScreen)
     yield fork(subscribeWindowMaxmized)
     yield fork(subscribeUpdateAvailable)
     yield fork(subscribeUpdateDownloaded)
+    yield fork(subscribeUpdateDownloadProgress)
     yield fork(sysemConsoleLog)
     yield fork(sysemConsoleWarning)
     yield fork(sysemConsoleError)

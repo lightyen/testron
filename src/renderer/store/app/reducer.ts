@@ -16,8 +16,12 @@ interface AppStoreType {
     version: Version
     cpuusage: number
     memory: SystemMemoryInfo
-    updateAvailable: boolean
-    updateDownloaded: boolean
+    update: {
+        available: boolean
+        version: string
+        downloaded: boolean
+        progress: number
+    }
 }
 
 export type AppStore = Readonly<AppStoreType>
@@ -37,8 +41,12 @@ const init: AppStore = {
         free: 0,
         total: 0,
     },
-    updateAvailable: false,
-    updateDownloaded: false,
+    update: {
+        available: false,
+        version: "",
+        downloaded: false,
+        progress: 0,
+    },
 }
 
 export const appReducer: Reducer<AppStore, Action> = (state = init, action): AppStore => {

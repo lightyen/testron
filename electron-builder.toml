@@ -12,7 +12,7 @@ extraResources = ["assets/**/*"]
 
 [publish]
 provider = "github"
-token = "${env.GH_TESTRON_TOKEN}"
+token = "${env.GH_TOKEN}"
 releaseType = "release"
 
 [directories]
@@ -35,7 +35,7 @@ createDesktopShortcut = true
 createStartMenuShortcut = true
 menuCategory = true
 language = 1033
-runAfterFinish = true
+runAfterFinish = false
 
 # For Windows
 
