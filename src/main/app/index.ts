@@ -34,8 +34,24 @@ Electron.app.on("ready", () => {
     //         .catch(err => console.error("An error occurred: ", err))
     // }
     initWindow()
-    // autoUpdater.autoDownload = false
-    autoUpdater.checkForUpdates()
+    autoUpdater.on("update-available", info => {
+        mainWindow.webContents.send("update-available", { data: info })
+    })
+    autoUpdater.on("download-progress", info => {
+        const { bytesPerSecond, percent, transferred, total } = info
+        mainWindow.webContents.send("download-progress", { data: { bytesPerSecond, percent, transferred, total } })
+    })
+    let downloaded = false
+    autoUpdater.on("update-downloaded", info => {
+        downloaded = true
+        mainWindow.webContents.send("update-downloaded", { data: info })
+    })
+    ipcMain.on("update-restart", () => {
+        if (downloaded) {
+            autoUpdater.quitAndInstall()
+        }
+    })
+    autoUpdater.checkForUpdatesAndNotify()
 })
 
 Electron.app.on("activate", () => {
@@ -74,25 +90,3 @@ export class Console {
         mainWindow.webContents.send("console.clear")
     }
 }
-
-autoUpdater.on("update-available", info => {
-    mainWindow.webContents.send("update-available", { data: info })
-})
-
-autoUpdater.on("download-progress", info => {
-    const { bytesPerSecond, percent, transferred, total } = info
-    mainWindow.webContents.send("download-progress", { data: { bytesPerSecond, percent, transferred, total } })
-})
-
-let downloaded = false
-
-autoUpdater.on("update-downloaded", info => {
-    downloaded = true
-    mainWindow.webContents.send("update-downloaded", { data: info })
-})
-
-ipcMain.on("update-restart", () => {
-    if (downloaded) {
-        autoUpdater.quitAndInstall()
-    }
-})

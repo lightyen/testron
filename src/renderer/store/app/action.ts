@@ -50,6 +50,10 @@ export interface GetAppSystemMemoryAction {
     usage?: SystemMemoryInfo
 }
 
+export interface AutoUpdaterMessageAction {
+    type: typeof AUTO_UPDATE_MESSAGE
+}
+
 export const getVersion = (): GetAppVersionAction => {
     return { type: GET_APP_VERSION.REQUEST }
 }

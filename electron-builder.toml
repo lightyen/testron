@@ -23,19 +23,18 @@ output = "build/"
 
 [appx]
 displayName = "testron"
-identityName = "ttt"
+identityName = "testron"
 publisherDisplayName = "lightyen"
 
 # Windows NSIS
 
 [nsis]
-shortcutName = "testron"
 oneClick = true
 createDesktopShortcut = true
 createStartMenuShortcut = true
 menuCategory = true
 language = 1033
-runAfterFinish = false
+runAfterFinish = true
 
 # For Windows
 
