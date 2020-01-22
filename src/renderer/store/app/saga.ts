@@ -12,13 +12,8 @@ import {
     GetAppTitleBarHideAction,
     GetAppCpuUsageAction,
     GetAppSystemMemoryAction,
-    AUTO_UPDATE_AVAILABLE,
     AUTO_UPDATE_DOWNLOADED,
-    AUTO_UPDATE_PROGRESS,
-    AutoUpdateAvailableAction,
     AutoUpdateDownloadedAction,
-    AutoUpdateProgressAction,
-    AUTO_UPDATE_DOWNLOAD,
     AUTO_UPDATE_RESTART,
 } from "./action"
 import { UpdateDownloadProgress, UpdateInfo } from "./model"
@@ -60,30 +55,10 @@ function* subscribeWindowMaxmized() {
     }
 }
 
-function* subscribeUpdateAvailable() {
-    const chan = yield subscibeChannel("update-available")
-    const info: UpdateInfo = yield take(chan)
-    yield put<AutoUpdateAvailableAction>({ type: AUTO_UPDATE_AVAILABLE, info })
-}
-
 function* subscribeUpdateDownloaded() {
     const chan = yield subscibeChannel("update-downloaded")
     const info: UpdateInfo = yield take(chan)
     yield put<AutoUpdateDownloadedAction>({ type: AUTO_UPDATE_DOWNLOADED, info })
-}
-
-function* subscribeUpdateDownloadProgress() {
-    const chan = yield subscibeChannel("download-progress")
-    while (true) {
-        const info: UpdateDownloadProgress = yield take(chan)
-        yield put<AutoUpdateProgressAction>({ type: AUTO_UPDATE_PROGRESS, info })
-    }
-}
-
-function* updateDownload() {
-    try {
-        yield call(request, "update-download")
-    } catch (e) {}
 }
 
 function* updateRestart() {
@@ -134,13 +109,10 @@ export default function* sagas() {
     yield takeEvery(GET_APP_VERSION.REQUEST, getAppVersion)
     yield takeEvery(GET_APP_CPU_USAGE.REQUEST, getCPUUsage)
     yield takeEvery(GET_APP_SYSTEM_MEMORY.REQUEST, getSystemMemory)
-    yield takeLeading(AUTO_UPDATE_DOWNLOAD, updateDownload)
     yield takeLeading(AUTO_UPDATE_RESTART, updateRestart)
     yield fork(subscribeWindowFullScreen)
     yield fork(subscribeWindowMaxmized)
-    yield fork(subscribeUpdateAvailable)
     yield fork(subscribeUpdateDownloaded)
-    yield fork(subscribeUpdateDownloadProgress)
     yield fork(sysemConsoleLog)
     yield fork(sysemConsoleWarning)
     yield fork(sysemConsoleError)

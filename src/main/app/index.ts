@@ -34,27 +34,13 @@ Electron.app.on("ready", () => {
     //         .catch(err => console.error("An error occurred: ", err))
     // }
     initWindow()
-    autoUpdater.autoDownload = false
-    autoUpdater.on("update-available", info => {
-        const { version, releaseDate, sha512, ...rest } = info
-        mainWindow.webContents.send("update-available", { data: { version, sha512, releaseDate } })
-    })
-    autoUpdater.on("download-progress", info => {
-        const { bytesPerSecond, percent, transferred, total } = info
-        mainWindow.webContents.send("download-progress", { data: { bytesPerSecond, percent, transferred, total } })
-    })
+    autoUpdater.autoDownload = true
+    autoUpdater.autoInstallOnAppQuit = false
     let downloaded = false
-    let downloading = false
     autoUpdater.on("update-downloaded", info => {
         downloaded = true
         const { version, releaseDate, sha512, ...rest } = info
         mainWindow.webContents.send("update-downloaded", { data: { version, sha512, releaseDate } })
-    })
-    ipcMain.on("update-download", () => {
-        if (!downloading) {
-            downloading = true
-            autoUpdater.downloadUpdate()
-        }
     })
     ipcMain.on("update-restart", () => {
         if (downloaded) {

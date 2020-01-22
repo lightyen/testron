@@ -12,28 +12,13 @@ const variants: Variants = {
 }
 
 const AutoUpdater: React.FC = () => {
-    const available = useSelector(state => state.app.update_available)
     const downloaded = useSelector(state => state.app.update_downloaded)
-    const progress = useSelector(state => state.app.update_progress)
     const version = useSelector(state => state.app.update_version)
-    const { updateDownload, updateRestart } = useAction().app
+    const { updateRestart } = useAction().app
     const [isOpen, setOpen] = React.useState(false)
     React.useEffect(() => {
-        available && setOpen(true)
-    }, [available])
-
-    function text() {
-        if (downloaded) {
-            return "Restart Now?"
-        }
-        if (progress > 0) {
-            return "Downloading..."
-        }
-        if (available) {
-            return "Download"
-        }
-        return ""
-    }
+        downloaded && setOpen(true)
+    }, [downloaded])
 
     return (
         <motion.div
@@ -48,16 +33,10 @@ const AutoUpdater: React.FC = () => {
                 <button
                     className="btn btn-blue"
                     onClick={() => {
-                        if (downloaded) {
-                            updateRestart()
-                            return
-                        }
-                        if (available) {
-                            updateDownload()
-                        }
+                        updateRestart()
                     }}
                 >
-                    {text()}
+                    Restart Now?
                 </button>
                 <button className="btn btn-blue ml-3" onClick={() => setOpen(false)}>
                     Later
