@@ -8,6 +8,9 @@ import {
     GET_APP_VERSION,
     GET_APP_CPU_USAGE,
     GET_APP_SYSTEM_MEMORY,
+    AUTO_UPDATE_AVAILABLE,
+    AUTO_UPDATE_DOWNLOADED,
+    AUTO_UPDATE_PROGRESS,
 } from "./action"
 
 interface AppStoreType {
@@ -16,12 +19,10 @@ interface AppStoreType {
     version: Version
     cpuusage: number
     memory: SystemMemoryInfo
-    update: {
-        available: boolean
-        version: string
-        downloaded: boolean
-        progress: number
-    }
+    update_available: boolean
+    update_downloaded: boolean
+    update_version: string
+    update_progress: number
 }
 
 export type AppStore = Readonly<AppStoreType>
@@ -41,12 +42,10 @@ const init: AppStore = {
         free: 0,
         total: 0,
     },
-    update: {
-        available: false,
-        version: "",
-        downloaded: false,
-        progress: 0,
-    },
+    update_available: false,
+    update_downloaded: false,
+    update_version: "",
+    update_progress: 0,
 }
 
 export const appReducer: Reducer<AppStore, Action> = (state = init, action): AppStore => {
@@ -63,6 +62,12 @@ export const appReducer: Reducer<AppStore, Action> = (state = init, action): App
             return { ...state, cpuusage: usage }
         case GET_APP_SYSTEM_MEMORY.SUCCESS:
             return { ...state, memory: action.usage }
+        case AUTO_UPDATE_AVAILABLE:
+            return { ...state, update_version: action.info.version, update_available: true }
+        case AUTO_UPDATE_DOWNLOADED:
+            return { ...state, update_downloaded: true }
+        case AUTO_UPDATE_PROGRESS:
+            return { ...state, update_progress: action.info.percent }
         default:
             return state
     }

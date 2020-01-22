@@ -1,4 +1,4 @@
-import { Version, CPUInfo, SystemMemoryInfo } from "./model"
+import { Version, CPUInfo, SystemMemoryInfo, UpdateInfo, UpdateDownloadProgress } from "./model"
 
 export const GET_APP_MAXIMIZED = "GET_APP_MAXIMIZED"
 export const GET_TITLEBAR_HIDE = "GET_TITLEBAR_HIDE"
@@ -21,9 +21,11 @@ export enum GET_APP_SYSTEM_MEMORY {
     FAILURE = "GET_APP_SYSTEM_MEMORY_FAILURE",
 }
 
-export const AUTO_UPDATE_MESSAGE = "AUTO_UPDATE_MESSAGE"
-
-export const UPDATE_AND_RESTART = "UPDATE_AND_RESTART"
+export const AUTO_UPDATE_AVAILABLE = "AUTO_UPDATE_AVAILABLE"
+export const AUTO_UPDATE_DOWNLOADED = "AUTO_UPDATE_DOWNLOADED"
+export const AUTO_UPDATE_PROGRESS = "AUTO_UPDATE_PROGRESS"
+export const AUTO_UPDATE_DOWNLOAD = "AUTO_UPDATE_DOWNLOAD"
+export const AUTO_UPDATE_RESTART = "AUTO_UPDATE_RESTART"
 
 export interface GetAppMaximizedAction {
     type: typeof GET_APP_MAXIMIZED
@@ -50,8 +52,19 @@ export interface GetAppSystemMemoryAction {
     usage?: SystemMemoryInfo
 }
 
-export interface AutoUpdaterMessageAction {
-    type: typeof AUTO_UPDATE_MESSAGE
+export interface AutoUpdateAvailableAction {
+    type: typeof AUTO_UPDATE_AVAILABLE
+    info: UpdateInfo
+}
+
+export interface AutoUpdateDownloadedAction {
+    type: typeof AUTO_UPDATE_DOWNLOADED
+    info: UpdateInfo
+}
+
+export interface AutoUpdateProgressAction {
+    type: typeof AUTO_UPDATE_PROGRESS
+    info: UpdateDownloadProgress
 }
 
 export const getVersion = (): GetAppVersionAction => {
@@ -66,10 +79,20 @@ export const getSystemMemoryInfo = (): GetAppSystemMemoryAction => {
     return { type: GET_APP_SYSTEM_MEMORY.REQUEST }
 }
 
+export const updateDownload = () => {
+    return { type: AUTO_UPDATE_DOWNLOAD }
+}
+
+export const updateRestart = () => {
+    return { type: AUTO_UPDATE_RESTART }
+}
+
 const actionCreators = {
     getVersion,
     getCpuUsage,
     getSystemMemoryInfo,
+    updateDownload,
+    updateRestart,
 }
 
 export default actionCreators
@@ -80,3 +103,6 @@ export type Action =
     | GetAppVersionAction
     | GetAppCpuUsageAction
     | GetAppSystemMemoryAction
+    | AutoUpdateAvailableAction
+    | AutoUpdateDownloadedAction
+    | AutoUpdateProgressAction

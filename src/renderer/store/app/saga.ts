@@ -7,13 +7,21 @@ import {
     GET_TITLEBAR_HIDE,
     GET_APP_CPU_USAGE,
     GET_APP_SYSTEM_MEMORY,
-    UPDATE_AND_RESTART,
     GetAppMaximizedAction,
     GetAppVersionAction,
     GetAppTitleBarHideAction,
     GetAppCpuUsageAction,
     GetAppSystemMemoryAction,
+    AUTO_UPDATE_AVAILABLE,
+    AUTO_UPDATE_DOWNLOADED,
+    AUTO_UPDATE_PROGRESS,
+    AutoUpdateAvailableAction,
+    AutoUpdateDownloadedAction,
+    AutoUpdateProgressAction,
+    AUTO_UPDATE_DOWNLOAD,
+    AUTO_UPDATE_RESTART,
 } from "./action"
+import { UpdateDownloadProgress, UpdateInfo } from "./model"
 
 function* getAppVersion() {
     try {
@@ -54,29 +62,31 @@ function* subscribeWindowMaxmized() {
 
 function* subscribeUpdateAvailable() {
     const chan = yield subscibeChannel("update-available")
-    while (true) {
-        const info: unknown = yield take(chan)
-        console.log("available", info)
-    }
+    const info: UpdateInfo = yield take(chan)
+    yield put<AutoUpdateAvailableAction>({ type: AUTO_UPDATE_AVAILABLE, info })
 }
 
 function* subscribeUpdateDownloaded() {
     const chan = yield subscibeChannel("update-downloaded")
-    while (true) {
-        const info: unknown = yield take(chan)
-        console.log("downloaded", info)
-    }
+    const info: UpdateInfo = yield take(chan)
+    yield put<AutoUpdateDownloadedAction>({ type: AUTO_UPDATE_DOWNLOADED, info })
 }
 
 function* subscribeUpdateDownloadProgress() {
     const chan = yield subscibeChannel("download-progress")
     while (true) {
-        const info: unknown = yield take(chan)
-        console.log("progress", info)
+        const info: UpdateDownloadProgress = yield take(chan)
+        yield put<AutoUpdateProgressAction>({ type: AUTO_UPDATE_PROGRESS, info })
     }
 }
 
-function* updateAndRestart() {
+function* updateDownload() {
+    try {
+        yield call(request, "update-download")
+    } catch (e) {}
+}
+
+function* updateRestart() {
     try {
         yield call(request, "update-restart")
     } catch (e) {}
@@ -124,7 +134,8 @@ export default function* sagas() {
     yield takeEvery(GET_APP_VERSION.REQUEST, getAppVersion)
     yield takeEvery(GET_APP_CPU_USAGE.REQUEST, getCPUUsage)
     yield takeEvery(GET_APP_SYSTEM_MEMORY.REQUEST, getSystemMemory)
-    yield takeLeading(UPDATE_AND_RESTART, updateAndRestart)
+    yield takeLeading(AUTO_UPDATE_DOWNLOAD, updateDownload)
+    yield takeLeading(AUTO_UPDATE_RESTART, updateRestart)
     yield fork(subscribeWindowFullScreen)
     yield fork(subscribeWindowMaxmized)
     yield fork(subscribeUpdateAvailable)
