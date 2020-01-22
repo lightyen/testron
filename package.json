@@ -2,7 +2,7 @@
   "name": "testron",
   "main": "dist/main.js",
   "description": "use electron and react with typescript",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "lightyen"
   },
@@ -27,7 +27,7 @@
     "start": "yarn && yarn run webpack-electron-dev && electron .",
     "test": "yarn && yarn run webpack-electron-prod && yarn run webpack-production",
     "build": "yarn && yarn run webpack-electron-prod && yarn run webpack-production && electron-builder",
-    "deploy": "yarn && yarn run webpack-electron-prod && yarn run webpack-production && electron-builder build --win --publish always",
+    "release": "yarn && yarn run webpack-electron-prod && yarn run webpack-production && electron-builder build --win --publish always",
     "win-create-self-signed-cert": "electron-builder create-self-signed-cert"
   },
   "devDependencies": {

@@ -12,7 +12,9 @@ extraResources = ["assets/**/*"]
 
 [publish]
 provider = "github"
+repo = "https://github.com/lightyen/testron.git"
 token = "${env.GH_TESTRON_TOKEN}"
+releaseType = "release"
 
 [directories]
 buildResources = "assets/"
