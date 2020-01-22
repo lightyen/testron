@@ -7,10 +7,6 @@
     "name": "lightyen"
   },
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lightyen/testron.git"
-  },
   "keywords": [
     "electron",
     "react",
