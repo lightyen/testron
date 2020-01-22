@@ -51,7 +51,7 @@ Electron.app.on("ready", () => {
             autoUpdater.quitAndInstall()
         }
     })
-    autoUpdater.checkForUpdatesAndNotify()
+    autoUpdater.checkForUpdates()
 })
 
 Electron.app.on("activate", () => {
