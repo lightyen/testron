@@ -1,5 +1,5 @@
 {
-  "name": "electron-react-typescript",
+  "name": "testron",
   "main": "dist/main.js",
   "description": "use electron and react with typescript",
   "version": "1.0.0",
@@ -7,6 +7,10 @@
     "name": "lightyen"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lightyen/testron.git"
+  },
   "keywords": [
     "electron",
     "react",
@@ -23,6 +27,7 @@
     "start": "yarn && yarn run webpack-electron-dev && electron .",
     "test": "yarn && yarn run webpack-electron-prod && yarn run webpack-production",
     "build": "yarn && yarn run webpack-electron-prod && yarn run webpack-production && electron-builder",
+    "deploy": "yarn && yarn run webpack-electron-prod && yarn run webpack-production && electron-builder build --win --publish always",
     "win-create-self-signed-cert": "electron-builder create-self-signed-cert"
   },
   "devDependencies": {

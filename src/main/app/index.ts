@@ -75,8 +75,9 @@ export class Console {
 }
 
 autoUpdater.on("update-available", info => {
-    Console.log(info)
+    mainWindow.webContents.send("update-available", { data: info })
 })
 autoUpdater.on("update-downloaded", info => {
-    autoUpdater.quitAndInstall()
+    mainWindow.webContents.send("update-downloaded", { data: info })
+    // autoUpdater.quitAndInstall()
 })

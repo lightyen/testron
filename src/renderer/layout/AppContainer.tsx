@@ -4,6 +4,7 @@ import StatusBar from "~/layout/StatusBar"
 import Viewer from "~/layout/Viewer"
 
 import { hot } from "react-hot-loader/root"
+import AutoUpdater from "~/components/AutoUpdater"
 
 const AppContainer: React.FC = () => {
     return (
@@ -11,6 +12,7 @@ const AppContainer: React.FC = () => {
             <TitleBar />
             <Viewer />
             <StatusBar hide />
+            <AutoUpdater />
         </div>
     )
 }

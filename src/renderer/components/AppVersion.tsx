@@ -63,6 +63,10 @@ const AppVersion: React.FC = () => {
                         <td>{version.os.name}</td>
                         <td>{version.os.version}</td>
                     </tr>
+                    <tr>
+                        <td>Version</td>
+                        <td>{version.app}</td>
+                    </tr>
                 </TBody>
             </Table>
         </Versions>

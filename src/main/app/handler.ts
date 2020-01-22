@@ -5,7 +5,7 @@ import { promisify } from "util"
 import { serializeError } from "serialize-error"
 
 import { IpcHandler, IpcPromiseHandler } from "~/ipc"
-import { appName, appPath, Console } from "~/app"
+import { appName, appPath, Console, isDevMode } from "~/app"
 
 export const getAppName: IpcHandler = () => {
     return { data: appName }
@@ -30,7 +30,11 @@ function getOS(): { name: string; version: string } {
 }
 
 export const getVersions: IpcHandler = () => {
-    return { data: { ...process.versions, os: getOS() } }
+    let app = Electron.app.getVersion()
+    if (isDevMode()) {
+        app = "unknown"
+    }
+    return { data: { ...process.versions, app, os: getOS() } }
 }
 
 interface SysMemInfo {

@@ -2,6 +2,7 @@ export interface Version {
     electron: string
     node: string
     chrome: string
+    app: string
     os: { name: string; version: string }
 }
 

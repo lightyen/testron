@@ -51,6 +51,22 @@ function* subscribeWindowMaxmized() {
     }
 }
 
+function* subscribeUpdateAvailable() {
+    const chan = yield subscibeChannel("update-available")
+    while (true) {
+        const info: unknown = yield take(chan)
+        console.log("available", info)
+    }
+}
+
+function* subscribeUpdateDownloaded() {
+    const chan = yield subscibeChannel("update-downloaded")
+    while (true) {
+        const info: unknown = yield take(chan)
+        console.log("downloaded", info)
+    }
+}
+
 function* sysemConsoleLog() {
     const chan = yield consoleChannel("console.log")
     while (true) {
@@ -95,6 +111,8 @@ export default function* sagas() {
     yield takeEvery(GET_APP_SYSTEM_MEMORY.REQUEST, getSystemMemory)
     yield fork(subscribeWindowFullScreen)
     yield fork(subscribeWindowMaxmized)
+    yield fork(subscribeUpdateAvailable)
+    yield fork(subscribeUpdateDownloaded)
     yield fork(sysemConsoleLog)
     yield fork(sysemConsoleWarning)
     yield fork(sysemConsoleError)
