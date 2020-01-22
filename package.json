@@ -2,7 +2,7 @@
   "name": "testron",
   "main": "dist/main.js",
   "description": "use electron and react with typescript",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "author": {
     "name": "lightyen"
   },
