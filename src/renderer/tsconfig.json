@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig.base",
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "jsx": "preserve",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "esnext",
+    "lib": ["esnext", "dom"],
+    "types": ["react", "webpack-env"],
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./*"],
+      "~assets/*": ["../../assets/*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+}
